@@ -1,3 +1,5 @@
+using Stock.Market.WebApi.GraphQL.Schema;
+
 namespace Stock.Market.WebApi.GraphQL
 {
     public class Program
@@ -7,8 +9,9 @@ namespace Stock.Market.WebApi.GraphQL
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
+            builder.Services.AddGraphQLServer()
+                .AddQueryType<Query>();
 
             var app = builder.Build();
 
@@ -18,7 +21,7 @@ namespace Stock.Market.WebApi.GraphQL
 
             app.UseAuthorization();
 
-
+            app.MapGraphQL();
             app.MapControllers();
 
             app.Run();
