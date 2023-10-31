@@ -4,8 +4,9 @@ namespace Stock.Market.WebApi.GraphQL.Schema
 {
     public class Query
     {
-
-        // 2. Get a list of the stocks you are holding
+        /// <summary>
+        /// Get a list of the stocks you are holding
+        /// </summary>
         public IEnumerable<StockDataType> GetStockData()
         {
             return new List<StockDataType>()

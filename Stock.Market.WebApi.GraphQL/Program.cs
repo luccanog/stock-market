@@ -10,8 +10,11 @@ namespace Stock.Market.WebApi.GraphQL
 
             // Add services to the container.
             builder.Services.AddControllers();
-            builder.Services.AddGraphQLServer()
-                .AddQueryType<Query>();
+            
+            builder.Services
+                .AddGraphQLServer()
+                .AddQueryType<Query>()
+                .AddMutationType<Mutation>();
 
             var app = builder.Build();
 
