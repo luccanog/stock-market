@@ -2,6 +2,7 @@
 using HotChocolate;
 using Microsoft.EntityFrameworkCore;
 using Stock.Market.Data;
+using Stock.Market.Data.Entities;
 using Stock.Market.WebApi.GraphQL.Models;
 using Stock.Market.WebApi.GraphQL.Schema;
 using Stock.Market.WebApi.GraphQL.Services.Interfaces;
@@ -79,6 +80,48 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
 
             //Assert
             Assert.IsAssignableFrom<GraphQLException>(exception);
+        }
+
+        [Fact]
+        public async Task MutationTests_SellStockShares_WithQuantityHigherThanAvailable_ShouldThrowGraphQLException()
+        {
+            //Arrange
+            var validSymbol = "AAPL";
+            var quantity = 4;
+            _nasdaqServiceMock.Setup(x => x.FetchNasdaqData(validSymbol))
+                .ReturnsAsync(_fixture.Create<NasdaqData>());
+            _context.Shares.AddRange(_fixture.Build<Shares>().With(s => s.Quantity, quantity / 2).Create());
+            _context.SaveChanges();
+
+            //Act
+            var exception = await Record.ExceptionAsync(async () => await _mutation.SellStockShares(validSymbol, quantity));
+
+            //Assert
+            Assert.IsAssignableFrom<GraphQLException>(exception);
+        }
+
+        [Fact]
+        public async Task MutationTests_SellStockShares_WithValidQuantity_ShouldSucceed()
+        {
+            //Arrange
+            var validSymbol = "AAPL";
+            var quantity = 4;
+            var shares = _fixture.Build<Shares>()
+                .With(s => s.Symbol, validSymbol)
+                .With(s => s.Quantity, quantity)
+                .Create();
+
+            _context.Shares.AddRange(shares);
+            _context.SaveChanges();
+
+            _nasdaqServiceMock.Setup(x => x.FetchNasdaqData(validSymbol))
+                .ReturnsAsync(_fixture.Create<NasdaqData>());
+
+            //Act
+            var result = await _mutation.SellStockShares(validSymbol, quantity);
+
+            //Assert
+            Assert.True(result);
         }
     }
 }

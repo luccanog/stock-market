@@ -21,20 +21,20 @@ namespace Stock.Market.WebApi.GraphQL.Schema
         /// </summary>
         public async Task<IEnumerable<StockDataType>> GetStockData()
         {
-            var acquisitionsBySymbol = _context.Shares.AsEnumerable().GroupBy(a=>a.Symbol);
+            var sharesBySymbol = _context.Shares.AsEnumerable().GroupBy(a=>a.Symbol);
             var stockDataType = new List<StockDataType>();
 
-            foreach (var acquisitions in acquisitionsBySymbol)
+            foreach (var shares in sharesBySymbol)
             {
-                var data = await _nasdaqService.FetchNasdaqData(acquisitions.Key);
+                var data = await _nasdaqService.FetchNasdaqData(shares.Key);
 
-                string variation = CalculateProfitLoss(acquisitions.ToList(), Shares.ParseCost(data.PrimaryData.LastSalePrice));
+                string variation = CalculateProfitLoss(shares.ToList(), Shares.ParseCost(data.PrimaryData.LastSalePrice));
 
                 stockDataType.Add(new StockDataType()
                 {
-                    Symbol = acquisitions.Key,
-                    SharesHeld = acquisitions.Sum(a=>a.Quantity),
-                    TotalValue = acquisitions.Sum(x=> x.OriginalUnitCost * x.Quantity),
+                    Symbol = shares.Key,
+                    SharesHeld = shares.Sum(a=>a.Quantity),
+                    TotalValue = shares.Sum(x=> x.OriginalUnitCost * x.Quantity),
                     Variation = variation, 
                     CurrentDayReferencePrices = new() //retrieve historical data from db
                 });

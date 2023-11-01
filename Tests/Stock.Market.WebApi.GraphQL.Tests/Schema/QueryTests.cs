@@ -35,24 +35,24 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
         {
             //Arrange
             var originalUnitCost = 5.50m;
-            var acquisition = _fixture.Build<Shares>()
+            var shares = _fixture.Build<Shares>()
                 .With(a => a.Quantity, 2)
                 .With(a => a.OriginalUnitCost, originalUnitCost)
                 .Create();
-            _context.Shares.Add(acquisition);
+            _context.Shares.Add(shares);
             await _context.SaveChangesAsync();
 
             var lastSalePrice = $"${originalUnitCost * 2}";
-            NasdaqData nasdaqData = CreateNasdaqData(acquisition.Symbol, lastSalePrice);
+            NasdaqData nasdaqData = CreateNasdaqData(shares.Symbol, lastSalePrice);
 
-            _nasdaqServiceMock.Setup(n => n.FetchNasdaqData(acquisition.Symbol)).ReturnsAsync(nasdaqData);
+            _nasdaqServiceMock.Setup(n => n.FetchNasdaqData(shares.Symbol)).ReturnsAsync(nasdaqData);
 
             //Act
             var result = await _query.GetStockData();
 
             //Assert
             Assert.Collection(result, r => Assert.Equal("100%", r.Variation));
-            Assert.Collection(result, r => Assert.Equal(acquisition.OriginalUnitCost * acquisition.Quantity, r.TotalValue));
+            Assert.Collection(result, r => Assert.Equal(shares.OriginalUnitCost * shares.Quantity, r.TotalValue));
             _nasdaqServiceMock.Verify(n => n.FetchNasdaqData(It.IsAny<string>()), Times.Once());
         }
 
@@ -61,24 +61,24 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
         {
             //Arrange
             var originalUnitCost = 10.00m;
-            var acquisition = _fixture.Build<Shares>()
+            var shares = _fixture.Build<Shares>()
                 .With(a => a.Quantity, 2)
                 .With(a => a.OriginalUnitCost, originalUnitCost)
                 .Create();
-            _context.Shares.Add(acquisition);
+            _context.Shares.Add(shares);
             await _context.SaveChangesAsync();
 
             var lastSalePrice = $"${originalUnitCost - 3}";
-            NasdaqData nasdaqData = CreateNasdaqData(acquisition.Symbol, lastSalePrice);
+            NasdaqData nasdaqData = CreateNasdaqData(shares.Symbol, lastSalePrice);
 
-            _nasdaqServiceMock.Setup(n => n.FetchNasdaqData(acquisition.Symbol)).ReturnsAsync(nasdaqData);
+            _nasdaqServiceMock.Setup(n => n.FetchNasdaqData(shares.Symbol)).ReturnsAsync(nasdaqData);
 
             //Act
             var result = await _query.GetStockData();
 
             //Assert
             Assert.Collection(result, r => Assert.Equal("-30%", r.Variation));
-            Assert.Collection(result, r => Assert.Equal(acquisition.OriginalUnitCost * acquisition.Quantity, r.TotalValue));
+            Assert.Collection(result, r => Assert.Equal(shares.OriginalUnitCost * shares.Quantity, r.TotalValue));
             _nasdaqServiceMock.Verify(n => n.FetchNasdaqData(It.IsAny<string>()), Times.Once());
         }
 
