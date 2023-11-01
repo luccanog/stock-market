@@ -1,5 +1,6 @@
 ﻿using Stock.Market.Data;
 using Stock.Market.Data.Entities;
+using Stock.Market.Data.Models;
 using Stock.Market.WebApi.GraphQL.Models;
 using Stock.Market.WebApi.GraphQL.Services.Interfaces;
 
@@ -11,8 +12,7 @@ namespace Stock.Market.WebApi.GraphQL.Schema
         private readonly IMessagingService _messagingService;
         private readonly ApplicationDBContext _context;
 
-        private const string BuySharesTopic = "buy-shares-topic";
-        private const string SellSharesTopic = "sell-shares-topic";
+        private const string EventsTopic = "event-topic";
 
         public Mutation(INasdaqService nasdaqService, IMessagingService messagingService, ApplicationDBContext context)
         {
@@ -27,11 +27,10 @@ namespace Stock.Market.WebApi.GraphQL.Schema
 
             NasdaqData? data = await GetNasdaqDataOrThrow(symbol);
 
-            _messagingService.Send(BuySharesTopic, new Acquisition(data.CompanyName, symbol, data.PrimaryData.LastSalePrice, quantity));
+            _messagingService.Send(EventsTopic, new Event(EventType.Buy, data.CompanyName, symbol, Shares.ParseCost(data.PrimaryData.LastSalePrice), quantity));
 
             return true;
         }
-
 
         public async Task<bool> SellStockShares(string symbol, int quantity)
         {
@@ -39,15 +38,16 @@ namespace Stock.Market.WebApi.GraphQL.Schema
 
             NasdaqData? data = await GetNasdaqDataOrThrow(symbol);
 
-            var currentShares = _context.Acquisitions.AsEnumerable();
-            var currentSharesTotalAmount = currentShares.Where(c => c.Symbol.Equals(symbol)).Sum(x => x.Quantity);
+            var currentSharesTotalAmount = _context.Shares.AsEnumerable()
+                                                          .Where(c => c.Symbol.Equals(symbol))
+                                                          .Sum(x => x.Quantity);
 
             if (quantity > currentSharesTotalAmount)
             {
                 throw new GraphQLException(new Error("The quantity of shares you are trying to sell is greater than the amount of shares you have. Please, check if you are trying to sell the correct Symbol"));
             }
 
-            _messagingService.Send(SellSharesTopic, new Acquisition(data.CompanyName, symbol, data.PrimaryData.LastSalePrice, quantity));
+            _messagingService.Send(EventsTopic, new Event(EventType.Sell, data.CompanyName, symbol, Shares.ParseCost(data.PrimaryData.LastSalePrice), quantity));
 
             return true;
         }

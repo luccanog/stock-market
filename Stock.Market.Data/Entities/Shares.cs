@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Stock.Market.Data.Entities
 {
-    [Table(nameof(Acquisition))]
-    public class Acquisition
+    [Table(nameof(Shares))]
+    public class Shares
     {
         public Guid Id { get; set; }
 
@@ -22,14 +22,14 @@ namespace Stock.Market.Data.Entities
 
         public DateTime Date { get; set; }
 
-        public Acquisition() { }
+        public Shares() { }
 
-        public Acquisition(string companyName, string symbol, string originalCost, int quantity)
+        public Shares(string companyName, string symbol, decimal originalCost, int quantity)
         {
             Id = Guid.NewGuid();
             CompanyName = companyName;
             Symbol = symbol;
-            OriginalUnitCost = ParseCost(originalCost);
+            OriginalUnitCost = originalCost;
             Date = DateTime.UtcNow;
             Quantity = quantity;
         }

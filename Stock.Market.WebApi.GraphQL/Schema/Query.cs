@@ -21,14 +21,14 @@ namespace Stock.Market.WebApi.GraphQL.Schema
         /// </summary>
         public async Task<IEnumerable<StockDataType>> GetStockData()
         {
-            var acquisitionsBySymbol = _context.Acquisitions.AsEnumerable().GroupBy(a=>a.Symbol);
+            var acquisitionsBySymbol = _context.Shares.AsEnumerable().GroupBy(a=>a.Symbol);
             var stockDataType = new List<StockDataType>();
 
             foreach (var acquisitions in acquisitionsBySymbol)
             {
                 var data = await _nasdaqService.FetchNasdaqData(acquisitions.Key);
 
-                string variation = CalculateProfitLoss(acquisitions.ToList(), Acquisition.ParseCost(data.PrimaryData.LastSalePrice));
+                string variation = CalculateProfitLoss(acquisitions.ToList(), Shares.ParseCost(data.PrimaryData.LastSalePrice));
 
                 stockDataType.Add(new StockDataType()
                 {
@@ -44,7 +44,7 @@ namespace Stock.Market.WebApi.GraphQL.Schema
            
         }
 
-        private string CalculateProfitLoss(List<Acquisition> acquisitions, decimal currentStockPrice)
+        private string CalculateProfitLoss(List<Shares> acquisitions, decimal currentStockPrice)
         {
             decimal totalCost = 0;
             decimal currentValue = 0;

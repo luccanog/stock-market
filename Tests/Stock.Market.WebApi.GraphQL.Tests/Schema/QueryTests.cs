@@ -35,11 +35,11 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
         {
             //Arrange
             var originalUnitCost = 5.50m;
-            var acquisition = _fixture.Build<Acquisition>()
+            var acquisition = _fixture.Build<Shares>()
                 .With(a => a.Quantity, 2)
                 .With(a => a.OriginalUnitCost, originalUnitCost)
                 .Create();
-            _context.Acquisitions.Add(acquisition);
+            _context.Shares.Add(acquisition);
             await _context.SaveChangesAsync();
 
             var lastSalePrice = $"${originalUnitCost * 2}";
@@ -61,11 +61,11 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
         {
             //Arrange
             var originalUnitCost = 10.00m;
-            var acquisition = _fixture.Build<Acquisition>()
+            var acquisition = _fixture.Build<Shares>()
                 .With(a => a.Quantity, 2)
                 .With(a => a.OriginalUnitCost, originalUnitCost)
                 .Create();
-            _context.Acquisitions.Add(acquisition);
+            _context.Shares.Add(acquisition);
             await _context.SaveChangesAsync();
 
             var lastSalePrice = $"${originalUnitCost - 3}";
