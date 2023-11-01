@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Primitives;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Stock.Market.Data.Entities
 {
     public class Share
     {
-        public Guid Id { get; set; } 
+
+        public Guid Id { get; set; }
 
         [Required]
         public string CompanyName { get; set; }
@@ -17,6 +17,8 @@ namespace Stock.Market.Data.Entities
         public decimal OriginalCost { get; set; }
 
         public DateTime AcquisitionDate { get; set; }
+
+        public Share() { }
 
         public Share(string companyName, string symbol, string originalCost)
         {
