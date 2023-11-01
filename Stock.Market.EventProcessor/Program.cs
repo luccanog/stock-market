@@ -1,3 +1,5 @@
+using Stock.Market.Data;
+
 namespace Stock.Market.EventProcessor
 {
     public class Program
@@ -8,6 +10,7 @@ namespace Stock.Market.EventProcessor
                 .ConfigureServices(services =>
                 {
                     services.AddHostedService<Worker>();
+                    services.AddDbContext<ApplicationDBContext>();
                 })
                 .Build();
 

@@ -1,4 +1,5 @@
 using Confluent.Kafka;
+using Stock.Market.Data;
 using Stock.Market.Data.Entities;
 using System.Text.Json;
 
@@ -36,14 +37,13 @@ namespace Stock.Market.EventProcessor
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
                 var consumeResult = _consumer.Consume(stoppingToken);
-                var command = JsonSerializer.Deserialize<Share>(consumeResult.Message.Value);
+                var share = JsonSerializer.Deserialize<Share>(consumeResult.Message.Value);
 
-                using (IServiceScope scope = _serviceProvider.CreateScope())
+                using (var scope = _serviceProvider.CreateScope())
                 {
-                    //IStorage<Note> storage =
-                    //    scope.ServiceProvider.GetRequiredService<IStorage<Note>>();
-
-                    //storage.Add(note);
+                    var context = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
+                    context.Shares.Add(share);
+                    await context.SaveChangesAsync();
                 }
             }
             _consumer.Close();
