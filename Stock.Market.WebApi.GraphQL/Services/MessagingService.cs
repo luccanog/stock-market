@@ -20,9 +20,9 @@ namespace Stock.Market.WebApi.GraphQL.Services
 
         }
 
-        public void Send<T>(T message)
+        public void Send<T>(string topic, T message)
         {
-            _producer.Produce(nameof(T), new Message<Null, string> { Value = JsonSerializer.Serialize(message) },
+            _producer.Produce(topic, new Message<Null, string> { Value = JsonSerializer.Serialize(message) },
                 (deliveryReport) =>
                 {
                     if (deliveryReport.Error.Code != ErrorCode.NoError)
