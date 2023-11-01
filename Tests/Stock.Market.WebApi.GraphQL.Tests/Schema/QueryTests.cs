@@ -22,7 +22,7 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
         public QueryTests()
         {
             var options = new DbContextOptionsBuilder<ApplicationDBContext>()
-                .UseInMemoryDatabase(databaseName: "MovieListDatabase")
+                .UseInMemoryDatabase(databaseName: "InMemoryDB")
                 .Options;
             _context = new ApplicationDBContext(options);
             _nasdaqServiceMock = new Mock<INasdaqService>();

@@ -1,5 +1,7 @@
 ﻿using GreenDonut;
 using HotChocolate;
+using Microsoft.EntityFrameworkCore;
+using Stock.Market.Data;
 using Stock.Market.WebApi.GraphQL.Models;
 using Stock.Market.WebApi.GraphQL.Schema;
 using Stock.Market.WebApi.GraphQL.Services.Interfaces;
@@ -16,14 +18,20 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
         private readonly Mock<INasdaqService> _nasdaqServiceMock;
         private readonly Mock<IMessagingService> _messagingServiceMock;
         private readonly Mutation _mutation;
+        private readonly ApplicationDBContext _context;
 
         private readonly Fixture _fixture;
 
         public MutationTests()
         {
+            var options = new DbContextOptionsBuilder<ApplicationDBContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDB")
+                .Options;
+
             _nasdaqServiceMock = new Mock<INasdaqService>();
             _messagingServiceMock = new Mock<IMessagingService>();
-            _mutation = new Mutation(_nasdaqServiceMock.Object, _messagingServiceMock.Object);
+            _context = new ApplicationDBContext(options);
+            _mutation = new Mutation(_nasdaqServiceMock.Object, _messagingServiceMock.Object, _context);
             _fixture = new Fixture();
         }
 

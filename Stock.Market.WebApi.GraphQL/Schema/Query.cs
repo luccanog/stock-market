@@ -1,7 +1,6 @@
 ﻿using Stock.Market.Data;
 using Stock.Market.Data.Entities;
 using Stock.Market.WebApi.GraphQL.Schema.Types;
-using Stock.Market.WebApi.GraphQL.Services;
 using Stock.Market.WebApi.GraphQL.Services.Interfaces;
 
 namespace Stock.Market.WebApi.GraphQL.Schema
