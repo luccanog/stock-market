@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Stock.Market.Data.Entities
 {
+    [Table(nameof(Acquisition))]
     public class Acquisition
     {
-
         public Guid Id { get; set; }
 
         [Required]

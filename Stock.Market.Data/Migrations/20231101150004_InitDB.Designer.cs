@@ -12,8 +12,8 @@ using Stock.Market.Data;
 namespace Stock.Market.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20231101140327_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20231101150004_InitDB")]
+    partial class InitDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,21 +25,24 @@ namespace Stock.Market.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Stock.Market.Data.Entities.Share", b =>
+            modelBuilder.Entity("Stock.Market.Data.Entities.Acquisition", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("AcquisitionDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("CompanyName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("OriginalCost")
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("OriginalUnitCost")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.Property<string>("Symbol")
                         .IsRequired()
@@ -47,7 +50,7 @@ namespace Stock.Market.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Shares");
+                    b.ToTable("Acquisition");
                 });
 #pragma warning restore 612, 618
         }
