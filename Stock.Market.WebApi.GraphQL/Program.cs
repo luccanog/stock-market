@@ -1,4 +1,7 @@
+using Stock.Market.WebApi.GraphQL.Models;
 using Stock.Market.WebApi.GraphQL.Schema;
+using Stock.Market.WebApi.GraphQL.Services;
+using Stock.Market.WebApi.GraphQL.Services.Interfaces;
 
 namespace Stock.Market.WebApi.GraphQL
 {
@@ -10,6 +13,9 @@ namespace Stock.Market.WebApi.GraphQL
 
             // Add services to the container.
             builder.Services.AddControllers();
+
+            builder.Services.AddSingleton<INasdaqService,NasdaqService>();
+            builder.Services.AddSingleton<IMessagingService,MessagingService>();
             
             builder.Services
                 .AddGraphQLServer()
