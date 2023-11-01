@@ -37,7 +37,7 @@ namespace Stock.Market.EventProcessor
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
                 var consumeResult = _consumer.Consume(stoppingToken);
-                var share = JsonSerializer.Deserialize<Share>(consumeResult.Message.Value);
+                var share = JsonSerializer.Deserialize<Acquisition>(consumeResult.Message.Value);
 
                 using (var scope = _serviceProvider.CreateScope())
                 {

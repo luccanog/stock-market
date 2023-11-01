@@ -2,7 +2,7 @@
 
 namespace Stock.Market.Data.Entities
 {
-    public class Share
+    public class Acquisition
     {
 
         public Guid Id { get; set; }
@@ -14,19 +14,23 @@ namespace Stock.Market.Data.Entities
         public string Symbol { get; set; }
 
         [Required]
-        public decimal OriginalCost { get; set; }
+        public decimal OriginalUnitCost { get; set; }
 
-        public DateTime AcquisitionDate { get; set; }
+        [Required]
+        public int Quantity { get; set; }
 
-        public Share() { }
+        public DateTime Date { get; set; }
 
-        public Share(string companyName, string symbol, string originalCost)
+        public Acquisition() { }
+
+        public Acquisition(string companyName, string symbol, string originalCost, int quantity)
         {
             Id = Guid.NewGuid();
             CompanyName = companyName;
             Symbol = symbol;
-            OriginalCost = ParseOriginalCost(originalCost);
-            AcquisitionDate = DateTime.UtcNow;
+            OriginalUnitCost = ParseOriginalCost(originalCost);
+            Date = DateTime.UtcNow;
+            Quantity = quantity;
         }
 
         private decimal ParseOriginalCost(string str)

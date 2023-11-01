@@ -32,14 +32,29 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
         {
             //Arrange
             var validSymbol = "AAPL";
+            var quantity = 4;
             _nasdaqServiceMock.Setup(x => x.FetchNasdaqData(validSymbol))
                 .ReturnsAsync(_fixture.Create<NasdaqData>());
 
             //Act
-            var result = await _mutation.BuyStockShares(validSymbol);
+            var result = await _mutation.BuyStockShares(validSymbol, quantity);
 
             //Assert
             Assert.True(result);
+        }
+
+        [Fact]
+        public async Task MutationTests_BuyStockShares_WithNegativeAmount_ShouldThrowGraphQLException()
+        {
+            //Arrange
+            var validSymbol = "AAPL";
+            var quantity = -7;
+
+            //Act
+            var exception = await Record.ExceptionAsync(async () => await _mutation.BuyStockShares(validSymbol, quantity));
+
+            //Assert
+            Assert.IsAssignableFrom<GraphQLException>(exception);
         }
 
 
@@ -48,10 +63,11 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
         {
             //Arrange
             var invalidSymbol = "xSYMBOLx";
+            var quantity = 1;
             _nasdaqServiceMock.Setup(x => x.FetchNasdaqData(invalidSymbol));
 
             //Act
-            var exception = await Record.ExceptionAsync(async () => await _mutation.BuyStockShares(invalidSymbol));
+            var exception = await Record.ExceptionAsync(async () => await _mutation.BuyStockShares(invalidSymbol, quantity));
 
             //Assert
             Assert.IsAssignableFrom<GraphQLException>(exception);

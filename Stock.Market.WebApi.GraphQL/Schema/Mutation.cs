@@ -15,8 +15,13 @@ namespace Stock.Market.WebApi.GraphQL.Schema
             _messagingService = messagingService;
         }
 
-        public async Task<bool> BuyStockShares(string symbol)
+        public async Task<bool> BuyStockShares(string symbol, int quantity)
         {
+            if (quantity <= 0)
+            {
+                throw new GraphQLException(new Error("The quantity amount must be greater than or equals to 1"));
+            }
+
             var data = await _nasdaqService.FetchNasdaqData(symbol);
 
             if (data is null)
@@ -24,7 +29,7 @@ namespace Stock.Market.WebApi.GraphQL.Schema
                 throw new GraphQLException(new Error("Either the provied symbol does not exist or the Nasdaq API failed. Please check the provided data and try again."));
             }
 
-            _messagingService.Send(BuySharesTopic, new Share(data.CompanyName, symbol, data.PrimaryData.LastSalePrice));
+            _messagingService.Send(BuySharesTopic, new Acquisition(data.CompanyName, symbol, data.PrimaryData.LastSalePrice, quantity));
 
             return true;
         }
