@@ -28,8 +28,4 @@
     <ProjectReference Include="..\..\Stock.Market.WebApi.GraphQL\Stock.Market.WebApi.GraphQL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>
