@@ -37,12 +37,12 @@ namespace Stock.Market.EventProcessor
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
                 var consumeResult = _consumer.Consume(stoppingToken);
-                var share = JsonSerializer.Deserialize<Acquisition>(consumeResult.Message.Value);
+                var acquisition = JsonSerializer.Deserialize<Acquisition>(consumeResult.Message.Value);
 
                 using (var scope = _serviceProvider.CreateScope())
                 {
                     var context = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
-                    context.Shares.Add(share);
+                    context.Acquisitions.Add(acquisition);
                     await context.SaveChangesAsync();
                 }
             }

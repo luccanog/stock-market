@@ -10,7 +10,7 @@ namespace Stock.Market.Data
 
         protected ApplicationDBContext() { }
 
-        public DbSet<Acquisition> Shares { get; set; }
+        public DbSet<Acquisition> Acquisitions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
