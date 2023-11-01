@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stock.Market.Data", "Stock.Market.Storage\Stock.Market.Data.csproj", "{AA5E0284-3320-4867-9195-444E9DB003EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stock.Market.Data", "Stock.Market.Data\Stock.Market.Data.csproj", "{AA5E0284-3320-4867-9195-444E9DB003EB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stock.Market.WebApi.GraphQL", "Stock.Market.WebApi.GraphQL\Stock.Market.WebApi.GraphQL.csproj", "{7E654EB0-E0FF-481B-B290-20EF525B19CD}"
 EndProject
