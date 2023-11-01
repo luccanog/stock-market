@@ -29,7 +29,7 @@ namespace Stock.Market.WebApi.GraphQL.Schema
             {
                 var data = await _nasdaqService.FetchNasdaqData(acquisitions.Key);
 
-                decimal variation = CalculateProfitLoss(acquisitions.ToList(), Acquisition.ParseCost(data.PrimaryData.LastSalePrice));
+                string variation = CalculateProfitLoss(acquisitions.ToList(), Acquisition.ParseCost(data.PrimaryData.LastSalePrice));
 
                 stockDataType.Add(new StockDataType()
                 {
@@ -45,7 +45,7 @@ namespace Stock.Market.WebApi.GraphQL.Schema
            
         }
 
-        private decimal CalculateProfitLoss(List<Acquisition> acquisitions, decimal currentStockPrice)
+        private string CalculateProfitLoss(List<Acquisition> acquisitions, decimal currentStockPrice)
         {
             decimal totalCost = 0;
             decimal currentValue = 0;
@@ -59,7 +59,9 @@ namespace Stock.Market.WebApi.GraphQL.Schema
             decimal profitLoss = currentValue - totalCost;
             decimal profitLossPercentage = (profitLoss / totalCost) * 100;
 
-            return profitLossPercentage;
+            var roundedNumber = decimal.Round(profitLossPercentage, 2, MidpointRounding.AwayFromZero);
+
+            return $"{roundedNumber}%";
         }
     }
 }

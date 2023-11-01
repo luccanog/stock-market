@@ -13,7 +13,7 @@
         /// <summary>
         /// Profit/Loss is how much the stock price has changed since the user bought it.
         /// </summary>
-        public decimal Variation { get; set; }
+        public string Variation { get; set; }
 
         /// <summary>
         /// How many shares you have of this stock.
