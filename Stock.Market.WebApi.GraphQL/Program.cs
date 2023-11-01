@@ -1,11 +1,12 @@
 using Stock.Market.Data;
-using Stock.Market.WebApi.GraphQL.Models;
 using Stock.Market.WebApi.GraphQL.Schema;
 using Stock.Market.WebApi.GraphQL.Services;
 using Stock.Market.WebApi.GraphQL.Services.Interfaces;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Stock.Market.WebApi.GraphQL
 {
+    [ExcludeFromCodeCoverage]
     public class Program
     {
         public static void Main(string[] args)

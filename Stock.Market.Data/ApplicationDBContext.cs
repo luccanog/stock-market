@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Stock.Market.Data.Entities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Stock.Market.Data
 {
+    [ExcludeFromCodeCoverage]
     public class ApplicationDBContext : DbContext
     {
         public ApplicationDBContext(DbContextOptions options) : base(options) { }
