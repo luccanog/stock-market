@@ -4,8 +4,7 @@ namespace Stock.Market.WebApi.GraphQL.Models
 {
     public class NasdaqResponse
     {
-        [JsonPropertyName("Data")]
-        public NasdaqData NasdaqData { get; set; }
+        public NasdaqData Data { get; set; }
     }
 
     public class NasdaqData
