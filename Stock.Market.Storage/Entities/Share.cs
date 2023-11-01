@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Extensions.Primitives;
+using System.ComponentModel.DataAnnotations;
 
 namespace Stock.Market.Data.Entities
 {
@@ -17,12 +18,19 @@ namespace Stock.Market.Data.Entities
 
         public DateTime AcquisitionDate { get; set; }
 
-        public Share(string companyName, string symbol, decimal originalCost)
+        public Share(string companyName, string symbol, string originalCost)
         {
             Id = Guid.NewGuid();
             CompanyName = companyName;
             Symbol = symbol;
-            OriginalCost = originalCost;
+            OriginalCost = ParseOriginalCost(originalCost);
+            AcquisitionDate = DateTime.UtcNow;
+        }
+
+        private decimal ParseOriginalCost(string str)
+        {
+            decimal.TryParse(str.TrimStart('$'), out var decimalValue);
+            return decimalValue;
         }
     }
 }

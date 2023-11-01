@@ -1,4 +1,5 @@
-﻿using Stock.Market.WebApi.GraphQL.Services.Interfaces;
+﻿using Stock.Market.Data.Entities;
+using Stock.Market.WebApi.GraphQL.Services.Interfaces;
 
 namespace Stock.Market.WebApi.GraphQL.Schema
 {
@@ -22,7 +23,7 @@ namespace Stock.Market.WebApi.GraphQL.Schema
                 throw new GraphQLException(new Error("Either the provied symbol does not exist or the Nasdaq API failed. Please check the provided data and try again."));
             }
 
-            _messagingService.Send(data);
+            _messagingService.Send(new Share(data.CompanyName, symbol, data.PrimaryData.LastSalePrice));
 
             return true;
         }
