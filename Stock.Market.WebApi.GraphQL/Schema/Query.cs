@@ -59,7 +59,7 @@ namespace Stock.Market.WebApi.GraphQL.Schema
             decimal profitLoss = currentValue - totalCost;
             decimal profitLossPercentage = (profitLoss / totalCost) * 100;
 
-            var roundedNumber = decimal.Round(profitLossPercentage, 2, MidpointRounding.AwayFromZero);
+            var roundedNumber = decimal.Round(profitLossPercentage, MidpointRounding.AwayFromZero);
 
             return $"{roundedNumber}%";
         }

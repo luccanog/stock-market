@@ -57,6 +57,32 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
         }
 
         [Fact]
+        public async Task Query_GetStockData_WithNegativeVariation_ShouldSucceed()
+        {
+            //Arrange
+            var originalUnitCost = 10.00m;
+            var acquisition = _fixture.Build<Acquisition>()
+                .With(a => a.Quantity, 2)
+                .With(a => a.OriginalUnitCost, originalUnitCost)
+                .Create();
+            _context.Acquisitions.Add(acquisition);
+            await _context.SaveChangesAsync();
+
+            var lastSalePrice = $"${originalUnitCost - 3}";
+            NasdaqData nasdaqData = CreateNasdaqData(acquisition.Symbol, lastSalePrice);
+
+            _nasdaqServiceMock.Setup(n => n.FetchNasdaqData(acquisition.Symbol)).ReturnsAsync(nasdaqData);
+
+            //Act
+            var result = await _query.GetStockData();
+
+            //Assert
+            Assert.Collection(result, r => Assert.Equal("-30%", r.Variation));
+            Assert.Collection(result, r => Assert.Equal(acquisition.OriginalUnitCost * acquisition.Quantity, r.TotalValue));
+            _nasdaqServiceMock.Verify(n => n.FetchNasdaqData(It.IsAny<string>()), Times.Once());
+        }
+
+        [Fact]
         public async Task Query_GetStockData_WithoutData_ShouldReturnEmptyList()
         {
             //Act
@@ -68,7 +94,6 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
 
             _nasdaqServiceMock.Verify(n => n.FetchNasdaqData(It.IsAny<string>()), Times.Never());
         }
-
 
         private NasdaqData CreateNasdaqData(string symbol, string lastSalePrice)
         {
