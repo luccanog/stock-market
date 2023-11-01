@@ -29,12 +29,12 @@ namespace Stock.Market.Data.Entities
             Id = Guid.NewGuid();
             CompanyName = companyName;
             Symbol = symbol;
-            OriginalUnitCost = ParseOriginalCost(originalCost);
+            OriginalUnitCost = ParseCost(originalCost);
             Date = DateTime.UtcNow;
             Quantity = quantity;
         }
 
-        private decimal ParseOriginalCost(string str)
+        public static decimal ParseCost(string str)
         {
             decimal.TryParse(str.TrimStart('$'), out var decimalValue);
             return decimalValue;

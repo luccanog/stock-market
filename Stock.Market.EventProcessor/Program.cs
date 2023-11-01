@@ -10,7 +10,7 @@ namespace Stock.Market.EventProcessor
                 .ConfigureServices(services =>
                 {
                     services.AddHostedService<Worker>();
-                    services.AddDbContext<ApplicationDBContext>();
+                    services.AddDbContext<ApplicationDBContext>(ServiceLifetime.Singleton);
                 })
                 .Build();
 
