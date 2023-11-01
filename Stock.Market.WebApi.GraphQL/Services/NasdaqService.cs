@@ -28,7 +28,7 @@ namespace Stock.Market.WebApi.GraphQL.Services
                 var requestUrl = _apiUrl.Replace(SYMBOL_PLACEHOLDER, symbol);
 
                 var response = await requestUrl
-                    .WithTimeout(TimeSpan.FromSeconds(TIMEOUT_THRESHOLD))
+                    .WithTimeout(TimeSpan.FromSeconds(0))
                     .WithCookie("Cookie", "dummy-cookie-for-testing")
                     .GetAsync();
 
@@ -39,6 +39,11 @@ namespace Stock.Market.WebApi.GraphQL.Services
 
                 var parsedResponse = await response.GetJsonAsync<NasdaqResponse>();
                 return parsedResponse?.Data;
+            }
+            catch(FlurlHttpTimeoutException  ex)
+            {
+                Console.WriteLine($"The Nasdaq API did not answered within the time limit: {ex.Message}");
+                return null;
             }
             catch (Exception ex)
             {

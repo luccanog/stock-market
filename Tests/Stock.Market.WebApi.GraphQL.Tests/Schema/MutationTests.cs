@@ -54,7 +54,7 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
             var exception = await Record.ExceptionAsync(async () => await _mutation.BuyStockShares(invalidSymbol));
 
             //Assert
-            Assert.True(exception is GraphQLException);
+            Assert.IsAssignableFrom<GraphQLException>(exception);
         }
     }
 }
