@@ -11,7 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stock.Market.EventProcessor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F4AEBC1B-BD0E-4CEE-9D0E-0AD321A8FB4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stock.Market.WebApi.GraphQL.Tests", "Tests\Stock.Market.WebApi.GraphQL.Tests\Stock.Market.WebApi.GraphQL.Tests.csproj", "{4C990730-6C14-4AED-A64A-E555EFD9CC28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stock.Market.WebApi.GraphQL.Tests", "Tests\Stock.Market.WebApi.GraphQL.Tests\Stock.Market.WebApi.GraphQL.Tests.csproj", "{4C990730-6C14-4AED-A64A-E555EFD9CC28}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3FDC12CD-0FBF-44D1-8DCC-50A7E34271FD}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yaml = docker-compose.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

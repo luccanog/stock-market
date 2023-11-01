@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-Stock.Market.EventProcessor-99cc699b-8642-47be-a98a-ffcc19cc9bd1</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileRunArguments>--network=stock_market_default</DockerfileRunArguments>
   </PropertyGroup>
 
   <ItemGroup>

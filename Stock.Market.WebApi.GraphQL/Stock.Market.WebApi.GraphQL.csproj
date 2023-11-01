@@ -6,7 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>1542dcc7-6546-487d-9cb2-7f58821de13e</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileRunArguments>--network=stock_market_default</DockerfileRunArguments>
   </PropertyGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Confluent.Kafka" Version="2.3.0" />

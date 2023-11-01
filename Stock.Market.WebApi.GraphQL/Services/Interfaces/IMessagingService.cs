@@ -2,6 +2,6 @@
 {
     public interface IMessagingService
     {
-        void Send<T>(T message);
+        void Send<T>(string topic, T message);
     }
 }

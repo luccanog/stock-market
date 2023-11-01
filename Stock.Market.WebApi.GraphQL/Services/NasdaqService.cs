@@ -28,7 +28,7 @@ namespace Stock.Market.WebApi.GraphQL.Services
                 var requestUrl = _apiUrl.Replace(SYMBOL_PLACEHOLDER, symbol);
 
                 var response = await requestUrl
-                    .WithTimeout(TimeSpan.FromSeconds(0))
+                    .WithTimeout(TimeSpan.FromSeconds(TIMEOUT_THRESHOLD))
                     .WithCookie("Cookie", "dummy-cookie-for-testing")
                     .GetAsync();
 
