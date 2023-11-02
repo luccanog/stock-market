@@ -37,7 +37,7 @@ namespace Stock.Market.EventProcessor.Handlers
 
             if (totalSharesToSold == shares.Sum(s => s.Quantity))
             {
-                _context.Shares.Where(s => s.Symbol == eventMessage.Symbol).ExecuteDelete();
+                _context.RemoveRange(_context.Shares.Where(s => s.Symbol == eventMessage.Symbol));
                 return;
             }
 
