@@ -1,10 +1,9 @@
 ﻿using Stock.Market.Data.Entities;
 using Stock.Market.Data;
 using Stock.Market.Data.Models;
-using Stock.Market.EventProcessor.Service.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using Stock.Market.EventProcessor.Services.Interfaces;
 
-namespace Stock.Market.EventProcessor.Handlers
+namespace Stock.Market.EventProcessor.Services
 {
     public class EventService : IEventService
     {

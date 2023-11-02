@@ -1,9 +1,7 @@
 using Confluent.Kafka;
 using Stock.Market.Data;
-using static Confluent.Kafka.ConfigPropertyNames;
-using System.Text;
-using Stock.Market.EventProcessor.Service.Interfaces;
-using Stock.Market.EventProcessor.Handlers;
+using Stock.Market.EventProcessor.Services.Interfaces;
+using Stock.Market.EventProcessor.Services;
 
 namespace Stock.Market.EventProcessor
 {

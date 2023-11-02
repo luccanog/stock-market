@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Stock.Market.Data;
 using Stock.Market.Data.Entities;
 using Stock.Market.Data.Models;
-using Stock.Market.EventProcessor.Service.Interfaces;
+using Stock.Market.EventProcessor.Services.Interfaces;
 using System.Text.Json;
 
 namespace Stock.Market.EventProcessor

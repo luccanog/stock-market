@@ -1,6 +1,6 @@
 ﻿using Stock.Market.Data.Models;
 
-namespace Stock.Market.EventProcessor.Service.Interfaces
+namespace Stock.Market.EventProcessor.Services.Interfaces
 {
     public interface IEventService
     {
