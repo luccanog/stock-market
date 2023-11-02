@@ -1,6 +1,6 @@
-﻿using Stock.Market.WebApi.GraphQL.Models;
+﻿using Stock.Market.Common.Models;
 
-namespace Stock.Market.WebApi.GraphQL.Services.Interfaces
+namespace Stock.Market.Common.Services.Interfaces
 {
     public interface INasdaqService
     {

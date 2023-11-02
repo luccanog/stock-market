@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Stock.Market.WebApi.GraphQL.Models
+namespace Stock.Market.Common.Models
 {
     public class NasdaqResponse
     {

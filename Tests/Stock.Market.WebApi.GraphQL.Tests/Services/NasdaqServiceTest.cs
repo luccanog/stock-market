@@ -1,19 +1,8 @@
-﻿using Flurl.Http;
-using Flurl.Http.Testing;
+﻿using Flurl.Http.Testing;
 using Microsoft.Extensions.Configuration;
-using Moq.Protected;
-using Stock.Market.WebApi.GraphQL.Models;
-using Stock.Market.WebApi.GraphQL.Schema;
-using Stock.Market.WebApi.GraphQL.Services;
-using Stock.Market.WebApi.GraphQL.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Xunit.Sdk;
+using Stock.Market.Common.Models;
+using Stock.Market.Common.Services;
+using Stock.Market.Common.Services.Interfaces;
 
 namespace Stock.Market.WebApi.GraphQL.Tests.Services
 {

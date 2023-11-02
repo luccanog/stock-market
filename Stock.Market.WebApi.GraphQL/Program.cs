@@ -1,3 +1,5 @@
+using Stock.Market.Common.Services;
+using Stock.Market.Common.Services.Interfaces;
 using Stock.Market.Data;
 using Stock.Market.WebApi.GraphQL.Schema;
 using Stock.Market.WebApi.GraphQL.Services;

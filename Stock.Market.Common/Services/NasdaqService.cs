@@ -1,12 +1,10 @@
-﻿using Confluent.Kafka;
-using Flurl.Http;
-using Stock.Market.WebApi.GraphQL.Models;
-using Stock.Market.WebApi.GraphQL.Services.Interfaces;
+﻿using Flurl.Http;
+using Microsoft.Extensions.Configuration;
+using Stock.Market.Common.Models;
+using Stock.Market.Common.Services.Interfaces;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 
-namespace Stock.Market.WebApi.GraphQL.Services
+namespace Stock.Market.Common.Services
 {
     public class NasdaqService : INasdaqService
     {
@@ -40,7 +38,7 @@ namespace Stock.Market.WebApi.GraphQL.Services
                 var parsedResponse = await response.GetJsonAsync<NasdaqResponse>();
                 return parsedResponse?.Data;
             }
-            catch(FlurlHttpTimeoutException  ex)
+            catch (FlurlHttpTimeoutException ex)
             {
                 Console.WriteLine($"The Nasdaq API did not answered within the time limit: {ex.Message}");
                 return null;

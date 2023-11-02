@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Stock.Market.Common.Models;
+using Stock.Market.Common.Services.Interfaces;
 using Stock.Market.Data;
 using Stock.Market.Data.Entities;
-using Stock.Market.WebApi.GraphQL.Models;
 using Stock.Market.WebApi.GraphQL.Schema;
-using Stock.Market.WebApi.GraphQL.Services.Interfaces;
 
 namespace Stock.Market.WebApi.GraphQL.Tests.Schema
 {

@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Stock.Market.Common\Stock.Market.Common.csproj" />
     <ProjectReference Include="..\Stock.Market.Data\Stock.Market.Data.csproj" />
   </ItemGroup>
 
