@@ -22,6 +22,12 @@ namespace Stock.Market.WebApi.GraphQL.Schema
             _context = context;
         }
 
+        /// <summary>
+        /// Sends a <see cref="Event"/> through Kafka with <see cref="Event.EventType"/> as <see cref="EventType.Buy"/>
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
         public async Task<bool> BuyStockShares(string symbol, int quantity)
         {
             ValidateQuantityOrThrow(quantity);
@@ -33,6 +39,12 @@ namespace Stock.Market.WebApi.GraphQL.Schema
             return true;
         }
 
+        /// <summary>
+        /// Sends a <see cref="Event"/> through Kafka with <see cref="Event.EventType"/> as <see cref="EventType.Sell"/>
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
         public async Task<bool> SellStockShares(string symbol, int quantity)
         {
             ValidateQuantityOrThrow(quantity);
