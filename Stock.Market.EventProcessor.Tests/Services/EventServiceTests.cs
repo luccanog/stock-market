@@ -76,6 +76,31 @@ namespace Stock.Market.EventProcessor.Tests.Services
             Assert.False(_context.Shares.Any());
         }
 
+        [Fact]
+        public async Task EventService_Handle_BuyEvent_WithValidData_ShouldSucceed()
+        {
+            // Arrange
+            var symbol = "AAPL";
+
+            var eventMessage = _fixture.Build<Event>()
+                .With(e => e.Symbol, symbol)
+                .With(e => e.Quantity, 5)
+                .With(e => e.EventType, EventType.Buy)
+                .Create();
+
+            //Act
+            await _eventService.Handle(eventMessage);
+
+            //Assert 
+            var storedObject = _context.Shares.First();
+            Assert.True(_context.Shares.Any());
+            Assert.True(storedObject.Symbol.Equals(eventMessage.Symbol));
+            Assert.True(storedObject.Quantity.Equals(eventMessage.Quantity));
+            Assert.True(storedObject.CompanyName.Equals(eventMessage.CompanyName));
+            Assert.True(storedObject.OriginalUnitCost.Equals(eventMessage.Value));
+        }
+
+
         private Shares CreateSharesObject(string symbol, int firstSharesQuantity)
         {
             return _fixture.Build<Shares>()
