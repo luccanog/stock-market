@@ -92,7 +92,7 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
         }
 
         [Fact]
-        public async Task Query_GetStockData_WithAvailableStockHistory_ShouldSucceed()
+        public async Task Query_GetStockData_WithoutDailyShares_WithAvailableStockHistory_ShouldReturnCurrentDayReferencePrices()
         {
             //Arrange
             var symbol = "CFLT";
@@ -100,9 +100,11 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
             var averagePrice = 15m;
             var highestPrice = 20m;
 
-            var shares = _fixture.Build<Shares>().With(a => a.Symbol, symbol).Create();
+            var shares = _fixture.Build<Shares>().With(s => s.Symbol, symbol).With(s => s.Date, DateTime.Now.AddDays(-7)).Create();
+
             var stocksHistory = CreateStocksHistoryData(symbol, lowestPrice, averagePrice, highestPrice);
             var nasdaqData = CreateNasdaqData(symbol, ParseDecimalCostToString(highestPrice));
+
             _nasdaqServiceMock.Setup(n => n.FetchNasdaqData(shares.Symbol)).ReturnsAsync(nasdaqData);
 
             _context.Shares.Add(shares);
@@ -119,6 +121,34 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
             Assert.True(currentDayReferencePrices.AveragePrice == (lowestPrice + averagePrice + highestPrice) / 3);
         }
 
+        [Fact]
+        public async Task Query_GetStockData_WithDailyShares_WithoutAvailableStockHistory_ShouldReturnCurrentDayReferencePrices()
+        {
+            //Arrange
+            var symbol = "CFLT";
+            var lowestPrice = 10m;
+            var averagePrice = 15m;
+            var highestPrice = 20m;
+
+            var shares = CreateSharesData(symbol, lowestPrice, averagePrice, highestPrice);
+            var nasdaqData = CreateNasdaqData(symbol, ParseDecimalCostToString(lowestPrice));
+
+            _nasdaqServiceMock.Setup(n => n.FetchNasdaqData(symbol)).ReturnsAsync(nasdaqData);
+
+            _context.Shares.AddRange(shares);
+            _context.SaveChanges();
+
+            //Act
+            var result = await _query.GetStockData();
+
+            //Assert
+            var currentDayReferencePrices = result.FirstOrDefault()!.CurrentDayReferencePrices;
+            Assert.True(currentDayReferencePrices.LowestPrice == lowestPrice);
+            Assert.True(currentDayReferencePrices.HighestPrice == highestPrice);
+            Assert.True(currentDayReferencePrices.AveragePrice == (lowestPrice + averagePrice + highestPrice) / 3);
+        }
+
+
         private IEnumerable<StockHistory> CreateStocksHistoryData(string symbol, params decimal[] prices)
         {
             var result = new List<StockHistory>();
@@ -129,6 +159,23 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
                     .With(s => s.Symbol, symbol)
                     .With(s => s.Price, price)
                     .With(s => s.InsertDate, DateTime.UtcNow)
+                    .Create();
+
+                result.Add(stockHistory);
+            }
+            return result;
+        }
+
+        private IEnumerable<Shares> CreateSharesData(string symbol, params decimal[] prices)
+        {
+            var result = new List<Shares>();
+
+            foreach (var price in prices)
+            {
+                var stockHistory = _fixture.Build<Shares>()
+                    .With(s => s.Symbol, symbol)
+                    .With(s => s.OriginalUnitCost, price)
+                    .With(s => s.Date, DateTime.UtcNow)
                     .Create();
 
                 result.Add(stockHistory);

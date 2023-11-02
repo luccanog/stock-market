@@ -48,11 +48,11 @@ namespace Stock.Market.WebApi.GraphQL.Schema
         private CurrentDayReferencePrices GetCurrentDayReferencePrices(IGrouping<string, Shares> shares)
         {
             var sortedCurrentDayStocksPriceHistory = _context.StocksHistory
-                .Where(s => s.InsertDate.Date.Equals(DateTime.UtcNow.Date))
+                .Where(s => DateAreEquals(s.InsertDate.Date, DateTime.UtcNow.Date))
                 .Select(s => s.Price)
                 .ToList();
 
-            var heldSharesPrices = shares.Where(s => s.Date.Equals(DateTime.UtcNow.Date)).Select(s => s.OriginalUnitCost);
+            var heldSharesPrices = shares.Where(s => DateAreEquals(s.Date, DateTime.UtcNow.Date)).Select(s => s.OriginalUnitCost);
             sortedCurrentDayStocksPriceHistory.AddRange(heldSharesPrices);
 
             var allCurrentDayShares = sortedCurrentDayStocksPriceHistory.Distinct().Order();
@@ -74,6 +74,11 @@ namespace Stock.Market.WebApi.GraphQL.Schema
             };
 
 
+        }
+
+        private bool DateAreEquals(DateTime date1, DateTime date2)
+        {
+            return date1.Year.Equals(date2.Year) && date1.Month.Equals(date2.Month) && date1.Day.Equals(date2.Day);
         }
 
         private string CalculateProfitLoss(List<Shares> acquisitions, decimal currentStockPrice)
