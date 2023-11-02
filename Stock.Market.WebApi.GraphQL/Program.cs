@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Stock.Market.Common.Services;
 using Stock.Market.Common.Services.Interfaces;
 using Stock.Market.Data;
@@ -29,7 +30,13 @@ namespace Stock.Market.WebApi.GraphQL
                 .AddMutationType<Mutation>();
 
             var app = builder.Build();
-
+            
+            using (var serviceScope = app.Services.CreateScope())
+            {
+                Console.WriteLine("EF: EnsureCreated");
+                var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
+                context.Database.Migrate();
+            }
             // Configure the HTTP request pipeline.
 
             app.UseHttpsRedirection();

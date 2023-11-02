@@ -31,10 +31,14 @@ namespace Stock.Market.EventProcessor
             var configuration = provider.GetRequiredService<IConfiguration>();
             var config = new ConsumerConfig
             {
-                BootstrapServers = configuration["Kafka:BootstrapServers"],
-                GroupId = configuration["Kafka:GroupId"],
-                AutoOffsetReset = AutoOffsetReset.Earliest,
+                BootstrapServers = configuration["Kafka:Broker"],
+                SaslMechanism = SaslMechanism.Plain,
+                SecurityProtocol = SecurityProtocol.SaslSsl,
+                SaslUsername = configuration["Kafka:SaslUsername"],
+                SaslPassword = configuration["Kafka:SaslPassword"],
+                GroupId = "$Default"
             };
+
             services.AddSingleton(c => new ConsumerBuilder<Ignore, string>(config).Build());
 
             return services;

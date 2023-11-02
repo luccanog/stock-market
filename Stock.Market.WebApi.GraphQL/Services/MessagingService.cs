@@ -12,8 +12,11 @@ namespace Stock.Market.WebApi.GraphQL.Services
         {
             var config = new ProducerConfig
             {
-                BootstrapServers = configuration["Kafka:BootstrapServers"],
-                AllowAutoCreateTopics = true
+                BootstrapServers = configuration["Kafka:Broker"],
+                SaslMechanism = SaslMechanism.Plain,
+                SecurityProtocol = SecurityProtocol.SaslSsl,
+                SaslUsername = configuration["Kafka:SaslUsername"],
+                SaslPassword = configuration["Kafka:SaslPassword"],
             };
 
             _producer = new ProducerBuilder<Null, string>(config).Build();
@@ -22,7 +25,7 @@ namespace Stock.Market.WebApi.GraphQL.Services
 
         public void Send<T>(string topic, T message)
         {
-            _producer.Produce(topic, new Message<Null, string> { Value = JsonSerializer.Serialize(message) },
+            _producer.Produce("stock-market", new Message<Null, string> { Value = JsonSerializer.Serialize(message) },
                 (deliveryReport) =>
                 {
                     if (deliveryReport.Error.Code != ErrorCode.NoError)

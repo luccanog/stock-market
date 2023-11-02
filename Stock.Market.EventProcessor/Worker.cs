@@ -11,8 +11,6 @@ namespace Stock.Market.EventProcessor
         private readonly IConsumer<Ignore, string> _consumer;
         private readonly IServiceProvider _serviceProvider;
 
-        private const string EventsTopic = "event-topic";
-
         public Worker(ILogger<Worker> logger, IServiceProvider serviceProvider, IConsumer<Ignore, string> consumer)
         {
             _logger = logger;
@@ -22,7 +20,7 @@ namespace Stock.Market.EventProcessor
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _consumer.Subscribe(EventsTopic);
+            _consumer.Subscribe("stock-market");
 
             while (!stoppingToken.IsCancellationRequested)
             {
