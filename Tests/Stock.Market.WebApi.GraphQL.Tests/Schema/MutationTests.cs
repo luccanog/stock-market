@@ -1,16 +1,10 @@
-﻿using GreenDonut;
-using HotChocolate;
+﻿using HotChocolate;
 using Microsoft.EntityFrameworkCore;
 using Stock.Market.Data;
 using Stock.Market.Data.Entities;
 using Stock.Market.WebApi.GraphQL.Models;
 using Stock.Market.WebApi.GraphQL.Schema;
 using Stock.Market.WebApi.GraphQL.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Stock.Market.WebApi.GraphQL.Tests.Schema
 {
@@ -26,7 +20,7 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
         public MutationTests()
         {
             var options = new DbContextOptionsBuilder<ApplicationDBContext>()
-                .UseInMemoryDatabase(databaseName: "InMemoryDB")
+                .UseInMemoryDatabase(databaseName: nameof(MutationTests))
                 .Options;
 
             _nasdaqServiceMock = new Mock<INasdaqService>();

@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Stock.Market.Data;
 using Stock.Market.Data.Entities;
 using Stock.Market.Data.Models;
@@ -16,7 +15,7 @@ namespace Stock.Market.EventProcessor.Tests.Services
         public EventServiceTests()
         {
             var options = new DbContextOptionsBuilder<ApplicationDBContext>()
-                .UseInMemoryDatabase(databaseName: "InMemoryDB")
+                .UseInMemoryDatabase(databaseName: nameof(EventServiceTests))
                 .Options;
 
             _context = new ApplicationDBContext(options);
