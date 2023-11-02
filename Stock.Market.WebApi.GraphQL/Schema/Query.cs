@@ -1,4 +1,5 @@
-﻿using Stock.Market.Common.Services.Interfaces;
+﻿using Stock.Market.Common;
+using Stock.Market.Common.Services.Interfaces;
 using Stock.Market.Data;
 using Stock.Market.Data.Entities;
 using Stock.Market.WebApi.GraphQL.Schema.Types;
@@ -28,7 +29,7 @@ namespace Stock.Market.WebApi.GraphQL.Schema
             {
                 var data = await _nasdaqService.FetchNasdaqData(shares.Key);
 
-                string variation = CalculateProfitLoss(shares.ToList(), Shares.ParseCost(data!.PrimaryData.LastSalePrice));
+                string variation = CalculateProfitLoss(shares.ToList(), Utils.ParseCost(data!.PrimaryData.LastSalePrice));
 
                 stockDataType.Add(new StockDataType()
                 {

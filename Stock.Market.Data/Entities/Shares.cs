@@ -34,10 +34,5 @@ namespace Stock.Market.Data.Entities
             Quantity = quantity;
         }
 
-        public static decimal ParseCost(string str)
-        {
-            decimal.TryParse(str.TrimStart('$'), out var decimalValue);
-            return decimalValue;
-        }
     }
 }

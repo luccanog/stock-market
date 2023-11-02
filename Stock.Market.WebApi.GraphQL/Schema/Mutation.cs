@@ -1,7 +1,7 @@
-﻿using Stock.Market.Common.Models;
+﻿using Stock.Market.Common;
+using Stock.Market.Common.Models;
 using Stock.Market.Common.Services.Interfaces;
 using Stock.Market.Data;
-using Stock.Market.Data.Entities;
 using Stock.Market.Data.Models;
 using Stock.Market.WebApi.GraphQL.Services.Interfaces;
 
@@ -28,7 +28,7 @@ namespace Stock.Market.WebApi.GraphQL.Schema
 
             NasdaqData? data = await GetNasdaqDataOrThrow(symbol);
 
-            _messagingService.Send(EventsTopic, new Event(EventType.Buy, data!.CompanyName, symbol, Shares.ParseCost(data.PrimaryData.LastSalePrice), quantity));
+            _messagingService.Send(EventsTopic, new Event(EventType.Buy, data!.CompanyName, symbol, Utils.ParseCost(data.PrimaryData.LastSalePrice), quantity));
 
             return true;
         }
@@ -40,15 +40,22 @@ namespace Stock.Market.WebApi.GraphQL.Schema
             NasdaqData? data = await GetNasdaqDataOrThrow(symbol);
 
             var currentSharesTotalAmount = _context.Shares.AsEnumerable()
-                                                          .Where(c => c.Symbol.Equals(symbol))
-                                                          .Sum(x => x.Quantity);
+                .Where(c => c.Symbol.Equals(symbol))
+                .Sum(x => x.Quantity);
 
             if (quantity > currentSharesTotalAmount)
             {
-                throw new GraphQLException(new Error("The quantity of shares you are trying to sell is greater than the amount of shares you have. Please, check if you are trying to sell the correct Symbol"));
+                string errorMessage = "The quantity of shares you are trying to sell is greater than the amount of shares you have.";
+                errorMessage += "Please, check if you are trying to sell the correct Symbol";
+                throw new GraphQLException(new Error(errorMessage));
             }
 
-            _messagingService.Send(EventsTopic, new Event(EventType.Sell, data!.CompanyName, symbol, Shares.ParseCost(data.PrimaryData.LastSalePrice), quantity));
+            _messagingService.Send(EventsTopic, new Event(
+                EventType.Sell,
+                data!.CompanyName,
+                symbol,
+                Utils.ParseCost(data.PrimaryData.LastSalePrice),
+                quantity));
 
             return true;
         }
