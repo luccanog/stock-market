@@ -6,9 +6,7 @@ namespace Stock.Market.Common
     {
         public static decimal ParseCost(string stringValue)
         {
-            var culture = CultureInfo.CreateSpecificCulture("en-US");
-
-            decimal.TryParse(stringValue.TrimStart('$'), culture, out var decimalValue);
+            decimal.TryParse(stringValue.TrimStart('$'), CultureInfo.InvariantCulture, out var decimalValue);
 
             return decimalValue;
         }
