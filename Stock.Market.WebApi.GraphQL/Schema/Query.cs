@@ -22,7 +22,7 @@ namespace Stock.Market.WebApi.GraphQL.Schema
         /// </summary>
         public async Task<IEnumerable<StockDataType>> GetStockData()
         {
-            var sharesBySymbol = _context.Shares.AsEnumerable().GroupBy(a=>a.Symbol);
+            var sharesBySymbol = _context.Shares.AsEnumerable().GroupBy(a => a.Symbol);
             var stockDataType = new List<StockDataType>();
 
             foreach (var shares in sharesBySymbol)
@@ -34,15 +34,46 @@ namespace Stock.Market.WebApi.GraphQL.Schema
                 stockDataType.Add(new StockDataType()
                 {
                     Symbol = shares.Key,
-                    SharesHeld = shares.Sum(a=>a.Quantity),
-                    TotalValue = shares.Sum(x=> x.OriginalUnitCost * x.Quantity),
-                    Variation = variation, 
-                    CurrentDayReferencePrices = new() //retrieve historical data from db
+                    SharesHeld = shares.Sum(a => a.Quantity),
+                    TotalValue = shares.Sum(x => x.OriginalUnitCost * x.Quantity),
+                    Variation = variation,
+                    CurrentDayReferencePrices = GetCurrentDayReferencePrices(shares)
                 });
             }
-            
+
             return stockDataType;
-           
+
+        }
+
+        private CurrentDayReferencePrices GetCurrentDayReferencePrices(IGrouping<string, Shares> shares)
+        {
+            var sortedCurrentDayStocksPriceHistory = _context.StocksHistory
+                .Where(s => s.InsertDate.Date.Equals(DateTime.UtcNow.Date))
+                .Select(s => s.Price)
+                .ToList();
+
+            var heldSharesPrices = shares.Where(s => s.Date.Equals(DateTime.UtcNow.Date)).Select(s => s.OriginalUnitCost);
+            sortedCurrentDayStocksPriceHistory.AddRange(heldSharesPrices);
+
+            var allCurrentDayShares = sortedCurrentDayStocksPriceHistory.Distinct().Order();
+
+            if (!allCurrentDayShares.Any())
+            {
+                return new CurrentDayReferencePrices();
+            }
+
+            var lowest = sortedCurrentDayStocksPriceHistory.First();
+            var highest = sortedCurrentDayStocksPriceHistory.Last();
+            var average = sortedCurrentDayStocksPriceHistory.Average();
+
+            return new CurrentDayReferencePrices
+            {
+                AveragePrice = average,
+                LowestPrice = lowest,
+                HighestPrice = highest
+            };
+
+
         }
 
         private string CalculateProfitLoss(List<Shares> acquisitions, decimal currentStockPrice)

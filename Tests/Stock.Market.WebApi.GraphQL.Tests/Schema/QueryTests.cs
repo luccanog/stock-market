@@ -102,6 +102,8 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
 
             var shares = _fixture.Build<Shares>().With(a => a.Symbol, symbol).Create();
             var stocksHistory = CreateStocksHistoryData(symbol, lowestPrice, averagePrice, highestPrice);
+            var nasdaqData = CreateNasdaqData(symbol, ParseDecimalCostToString(highestPrice));
+            _nasdaqServiceMock.Setup(n => n.FetchNasdaqData(shares.Symbol)).ReturnsAsync(nasdaqData);
 
             _context.Shares.Add(shares);
             _context.StocksHistory.AddRange(stocksHistory);
@@ -125,7 +127,7 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
             {
                 var stockHistory = _fixture.Build<StockHistory>()
                     .With(s => s.Symbol, symbol)
-                    .With(s => s.Price, 10m)
+                    .With(s => s.Price, price)
                     .With(s => s.InsertDate, DateTime.UtcNow)
                     .Create();
 
