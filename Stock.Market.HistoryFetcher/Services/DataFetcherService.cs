@@ -1,21 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Stock.Market.Common.Services.Interfaces;
+using Stock.Market.Data;
+using Stock.Market.Data.Entities;
+using Stock.Market.HistoryFetcher.Services.Interfaces;
 
 namespace Stock.Market.HistoryFetcher.Services
 {
-    public class DataFetcherService
+    public class DataFetcherService : IDataFetcherService
     {
-        private const string SYMBOL_PLACEHOLDER = "SYMBOL";
-        private const int TIMEOUT_THRESHOLD = 10;
+        private readonly INasdaqService _nasdaqService;
+        private readonly ApplicationDBContext _context;
 
-        private readonly string _apiUrl;
-
-        public DataFetcherService(IConfiguration configuration)
+        public DataFetcherService(INasdaqService nasdaqService, ApplicationDBContext context)
         {
-            _apiUrl = configuration["NasdaqApiUrl"]!;
+            _nasdaqService = nasdaqService;
+            _context = context;
+        }
+
+        public async Task UpdateStocksHistory()
+        {
+            var symbols = _context.Shares.Select(s => s.Symbol).Distinct().ToList();
+
+            foreach (var symbol in symbols)
+            {
+                var data = await _nasdaqService.FetchNasdaqData(symbol);
+                var roster = new StockHistory(data.CompanyName, symbol, Shares.ParseCost(data.PrimaryData.LastSalePrice));
+                _context.StocksHistory.Add(roster);
+            }
+
+            _context.SaveChanges();
         }
 
     }
