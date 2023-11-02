@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using Stock.Market.Data;
 using Stock.Market.Data.Entities;
 using Stock.Market.Data.Models;
+using Stock.Market.EventProcessor.Handlers;
+using Stock.Market.EventProcessor.Service.Interfaces;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -34,6 +36,7 @@ namespace Stock.Market.EventProcessor.Tests
             {
                 builder.UseInMemoryDatabase(databaseName: "InMemoryDB");
             });
+            serviceColletion.AddSingleton<IEventService, EventService>();
             _consumerMock = new Mock<IConsumer<Ignore, string>>();
 
             _serviceProvider = serviceColletion.BuildServiceProvider();

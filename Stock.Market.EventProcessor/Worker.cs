@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Stock.Market.Data;
 using Stock.Market.Data.Entities;
 using Stock.Market.Data.Models;
+using Stock.Market.EventProcessor.Service.Interfaces;
 using System.Text.Json;
 
 namespace Stock.Market.EventProcessor
@@ -35,51 +36,8 @@ namespace Stock.Market.EventProcessor
 
                 using (var scope = _serviceProvider.CreateScope())
                 {
-                    var context = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
-
-                    if (eventMessage.EventType is EventType.Buy)
-                    {
-                        var shares = new Shares(eventMessage.CompanyName, eventMessage.Symbol, eventMessage.Value, eventMessage.Quantity);
-                        context.Shares.Add(shares);
-                    }
-                    else
-                    {
-                        var totalSharesToSold = eventMessage.Quantity;
-
-                        var shares = context.Shares.Where(s => s.Symbol == eventMessage.Symbol);
-
-                        if (totalSharesToSold == shares.Sum(s => s.Quantity))
-                        {
-                            context.Shares.Where(s => s.Symbol == eventMessage.Symbol).ExecuteDelete();
-                        }
-                        else
-                        {
-                            var soldShares = 0;
-
-                            foreach (var share in shares)
-                            {
-                                if (soldShares + share.Quantity <= totalSharesToSold)
-                                {
-                                    context.Shares.Remove(share);
-                                    soldShares += share.Quantity;
-                                }
-                                else
-                                {
-                                    var remainingSharesToBeSold = totalSharesToSold - soldShares;
-                                    share.Quantity = share.Quantity - remainingSharesToBeSold;
-                                    soldShares += remainingSharesToBeSold;
-                                }
-
-                                if (soldShares == totalSharesToSold)
-                                {
-                                    break;
-                                }
-                            }
-
-                        }
-                    }
-
-                    await context.SaveChangesAsync();
+                    var eventService = scope.ServiceProvider.GetRequiredService<IEventService>();
+                    await eventService.Handle(eventMessage!);
                 }
             }
             _consumer.Close();
