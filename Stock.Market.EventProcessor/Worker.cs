@@ -1,7 +1,4 @@
 using Confluent.Kafka;
-using Microsoft.EntityFrameworkCore;
-using Stock.Market.Data;
-using Stock.Market.Data.Entities;
 using Stock.Market.Data.Models;
 using Stock.Market.EventProcessor.Services.Interfaces;
 using System.Text.Json;
@@ -14,7 +11,7 @@ namespace Stock.Market.EventProcessor
         private readonly IConsumer<Ignore, string> _consumer;
         private readonly IServiceProvider _serviceProvider;
 
-        private const string BuySharesTopic = "event-topic";
+        private const string EventsTopic = "event-topic";
 
         public Worker(ILogger<Worker> logger, IServiceProvider serviceProvider, IConsumer<Ignore, string> consumer)
         {
@@ -25,7 +22,7 @@ namespace Stock.Market.EventProcessor
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _consumer.Subscribe(BuySharesTopic);
+            _consumer.Subscribe(EventsTopic);
 
             while (!stoppingToken.IsCancellationRequested)
             {
