@@ -8,12 +8,10 @@ namespace Stock.Market.EventProcessor.Handlers
 {
     public class EventService : IEventService
     {
-        private readonly IServiceProvider _serviceProvider;
         private readonly ApplicationDBContext _context;
 
-        public EventService(IServiceProvider serviceProvider, ApplicationDBContext context)
+        public EventService(ApplicationDBContext context)
         {
-            _serviceProvider = serviceProvider;
             _context = context;
         }
 
