@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Stock.Market.Data.Entities
 {
-    [Table(nameof(History))]
-    public class History
+    [Table(nameof(StockHistory))]
+    public class StockHistory
     {
         public Guid Id { get; set; }
 
@@ -20,7 +20,7 @@ namespace Stock.Market.Data.Entities
         [Required]
         public DateTime InsertDate { get; set; }
 
-        public History(string companyName, string symbol, decimal price)
+        public StockHistory(string companyName, string symbol, decimal price)
         {
             Id = Guid.NewGuid();
             CompanyName = companyName;

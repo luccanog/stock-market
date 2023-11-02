@@ -13,6 +13,8 @@ namespace Stock.Market.Data
         protected ApplicationDBContext() { }
 
         public DbSet<Shares> Shares { get; set; }
+        
+        public DbSet<StockHistory> StocksHistory { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
