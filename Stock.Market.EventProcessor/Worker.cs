@@ -15,18 +15,10 @@ namespace Stock.Market.EventProcessor
 
         private const string BuySharesTopic = "event-topic";
 
-        public Worker(ILogger<Worker> logger, IConfiguration configuration, IServiceProvider serviceProvider)
+        public Worker(ILogger<Worker> logger, IServiceProvider serviceProvider, IConsumer<Ignore, string> consumer)
         {
             _logger = logger;
-
-            var config = new ConsumerConfig
-            {
-                BootstrapServers = configuration["Kafka:BootstrapServers"],
-                GroupId = configuration["Kafka:GroupId"],
-                AutoOffsetReset = AutoOffsetReset.Earliest
-            };
-
-            _consumer = new ConsumerBuilder<Ignore, string>(config).Build();
+            _consumer = consumer;
             _serviceProvider = serviceProvider;
         }
 
@@ -63,7 +55,7 @@ namespace Stock.Market.EventProcessor
                         else
                         {
                             var acc = 0;
-                            
+
                             foreach (var share in shares)
                             {
                                 if (acc + share.Quantity <= soldQuantity)
@@ -72,7 +64,7 @@ namespace Stock.Market.EventProcessor
                                     acc += share.Quantity;
                                 }
 
-                                if(acc == share.Quantity)
+                                if (acc == share.Quantity)
                                 {
                                     break;
                                 }

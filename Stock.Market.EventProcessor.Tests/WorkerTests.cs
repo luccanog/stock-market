@@ -1,9 +1,12 @@
+using Confluent.Kafka;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Stock.Market.Data;
 using Stock.Market.Data.Entities;
+using Stock.Market.Data.Models;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace Stock.Market.EventProcessor.Tests
@@ -14,7 +17,7 @@ namespace Stock.Market.EventProcessor.Tests
         private readonly Mock<ILogger<Worker>> _loggerMock;
         private readonly ServiceProvider _serviceProvider;
         private readonly Fixture _fixture;
-
+        private readonly Mock<IConsumer<Ignore, string>> _consumerMock;
         public WorkerTests()
         {
             var configDic = new Dictionary<string, string?> {
@@ -31,10 +34,11 @@ namespace Stock.Market.EventProcessor.Tests
             {
                 builder.UseInMemoryDatabase(databaseName: "InMemoryDB");
             });
+            _consumerMock = new Mock<IConsumer<Ignore, string>>();
 
             _serviceProvider = serviceColletion.BuildServiceProvider();
             _loggerMock = new Mock<ILogger<Worker>>();
-            _worker = new Worker(_loggerMock.Object, configuration, _serviceProvider);
+            _worker = new Worker(_loggerMock.Object, _serviceProvider, _consumerMock.Object);
             _fixture = new Fixture();
         }
 
@@ -47,7 +51,11 @@ namespace Stock.Market.EventProcessor.Tests
             var secondShares = _fixture.Build<Shares>().With(s => s.Symbol, symbol).With(s => s.Quantity, 5).Create();
             InsertIntoDatabase(firstShares, secondShares);
 
-            /** @todo: mock kafka methods **/
+            var eventObj = _fixture.Build<Event>()
+                .With(e => e.Symbol, symbol)
+                .With(e => e.Quantity, 7)
+                .Create();
+            SetupKafkaConsumedMessage(eventObj);
 
             //Act
             await _worker.StartAsync(CancellationToken.None);
@@ -57,6 +65,21 @@ namespace Stock.Market.EventProcessor.Tests
             //Assert 
             /** @todo: check database **/
 
+        }
+
+        private void SetupKafkaConsumedMessage(Event eventObj)
+        {
+            var message = new Message<Ignore, string>()
+            {
+                Value = JsonSerializer.Serialize(eventObj)
+            };
+
+            var consumeResult = new ConsumeResult<Ignore, string>()
+            {
+                Message = message
+            };
+
+            _consumerMock.Setup(c => c.Consume(It.IsAny<CancellationToken>())).Returns(consumeResult);
         }
 
         private void InsertIntoDatabase(params Shares[] shares)
