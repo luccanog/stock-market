@@ -44,27 +44,33 @@ namespace Stock.Market.EventProcessor
                     }
                     else
                     {
-                        var soldQuantity = eventMessage.Quantity;
+                        var totalSharesToSold = eventMessage.Quantity;
 
                         var shares = context.Shares.Where(s => s.Symbol == eventMessage.Symbol);
 
-                        if (soldQuantity == shares.Sum(s => s.Quantity))
+                        if (totalSharesToSold == shares.Sum(s => s.Quantity))
                         {
                             context.Shares.Where(s => s.Symbol == eventMessage.Symbol).ExecuteDelete();
                         }
                         else
                         {
-                            var acc = 0;
+                            var soldShares = 0;
 
                             foreach (var share in shares)
                             {
-                                if (acc + share.Quantity <= soldQuantity)
+                                if (soldShares + share.Quantity <= totalSharesToSold)
                                 {
                                     context.Shares.Remove(share);
-                                    acc += share.Quantity;
+                                    soldShares += share.Quantity;
+                                }
+                                else
+                                {
+                                    var remainingSharesToBeSold = totalSharesToSold - soldShares;
+                                    share.Quantity = share.Quantity - remainingSharesToBeSold;
+                                    soldShares += remainingSharesToBeSold;
                                 }
 
-                                if (acc == share.Quantity)
+                                if (soldShares == totalSharesToSold)
                                 {
                                     break;
                                 }

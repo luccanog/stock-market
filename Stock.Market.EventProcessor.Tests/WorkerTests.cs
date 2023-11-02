@@ -54,16 +54,20 @@ namespace Stock.Market.EventProcessor.Tests
             var eventObj = _fixture.Build<Event>()
                 .With(e => e.Symbol, symbol)
                 .With(e => e.Quantity, 7)
+                .With(e => e.EventType, EventType.Sell)
                 .Create();
             SetupKafkaConsumedMessage(eventObj);
 
             //Act
-            await _worker.StartAsync(CancellationToken.None);
-            await Task.Delay(TimeSpan.FromSeconds(2));
-            await _worker.StopAsync(CancellationToken.None);
+            await Task.Run(() => _worker.StartAsync(new CancellationTokenSource().Token));
+            await Task.Delay(100);
+            await Task.Run(() => _worker.StopAsync(new CancellationTokenSource().Token));
 
             //Assert 
-            /** @todo: check database **/
+            var shares = GetFromDatabase();
+            Assert.True(shares.Count() == 1);
+            Assert.True(shares.Sum(s => s.Quantity) == firstShares.Quantity + secondShares.Quantity - eventObj.Quantity);
+
 
         }
 
@@ -89,6 +93,15 @@ namespace Stock.Market.EventProcessor.Tests
                 var context = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
                 context.Shares.AddRange(shares);
                 context.SaveChanges();
+            }
+        }
+
+        private IEnumerable<Shares> GetFromDatabase()
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
+                return context.Shares.AsEnumerable();
             }
         }
     }
