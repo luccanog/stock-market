@@ -27,7 +27,7 @@ namespace Stock.Market.WebApi.GraphQL.Schema
 
             NasdaqData? data = await GetNasdaqDataOrThrow(symbol);
 
-            _messagingService.Send(EventsTopic, new Event(EventType.Buy, data.CompanyName, symbol, Shares.ParseCost(data.PrimaryData.LastSalePrice), quantity));
+            _messagingService.Send(EventsTopic, new Event(EventType.Buy, data!.CompanyName, symbol, Shares.ParseCost(data.PrimaryData.LastSalePrice), quantity));
 
             return true;
         }
@@ -47,7 +47,7 @@ namespace Stock.Market.WebApi.GraphQL.Schema
                 throw new GraphQLException(new Error("The quantity of shares you are trying to sell is greater than the amount of shares you have. Please, check if you are trying to sell the correct Symbol"));
             }
 
-            _messagingService.Send(EventsTopic, new Event(EventType.Sell, data.CompanyName, symbol, Shares.ParseCost(data.PrimaryData.LastSalePrice), quantity));
+            _messagingService.Send(EventsTopic, new Event(EventType.Sell, data!.CompanyName, symbol, Shares.ParseCost(data.PrimaryData.LastSalePrice), quantity));
 
             return true;
         }
