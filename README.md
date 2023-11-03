@@ -32,6 +32,9 @@ You may see the **graphql-api** running along with **event-processor** and **his
 
 * **Stock.Market.Common** - Library with shared code.
 
+<img src='https://github.com/luccanog/stock-market/assets/55986783/37668f97-9031-49e8-ae87-0285524829c5' width='768'>
+
+
 ## GraphQL commands
 
 #### Buy a stock
