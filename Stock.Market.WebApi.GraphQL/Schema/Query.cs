@@ -52,6 +52,11 @@ namespace Stock.Market.WebApi.GraphQL.Schema
         {
             var sharesBySymbol = _context.StocksHistory.Where(a => a.Symbol.Equals(symbol)).AsEnumerable();
 
+            if (!sharesBySymbol.Any())
+            {
+                throw new GraphQLException("No historical data found for this SYMBOL. Please check if the SYMBOL is corret. Bear in mind: the history is update each hour.");
+            }
+
             var result = new StockPriceHistory(sharesBySymbol.First().CompanyName, sharesBySymbol.First().Symbol);
 
             foreach (var shares in sharesBySymbol.OrderByDescending(s=>s.InsertDate))

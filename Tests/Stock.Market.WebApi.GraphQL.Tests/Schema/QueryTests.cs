@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HotChocolate;
+using Microsoft.EntityFrameworkCore;
 using Stock.Market.Common.Models;
 using Stock.Market.Common.Services.Interfaces;
 using Stock.Market.Data;
@@ -149,6 +150,34 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
             Assert.True(currentDayReferencePrices.LowestPrice == lowestPrice);
             Assert.True(currentDayReferencePrices.HighestPrice == highestPrice);
             Assert.True(currentDayReferencePrices.AveragePrice == (lowestPrice + averagePrice + highestPrice) / 3);
+        }
+
+        [Fact]
+        public void Query_GetPriceHistory_WithoutData_OrWithInvalidSymbol_ShouldThrowException()
+        {
+            //Act
+            var exception = Record.Exception(() => _query.GetPriceHistory("some-symbol"));
+
+            //Assert
+            Assert.IsAssignableFrom<GraphQLException>(exception);
+        }
+
+        [Fact]
+        public void Query_GetPriceHistory_WithData_AndValidSymbol_ShouldSucceed()
+        {
+            //Arrange
+            var symbol = "NFLX";
+            var quoteAmount = 5;
+            var stockHistories = _fixture.Build<StockHistory>().With(s => s.Symbol, symbol).CreateMany(quoteAmount);
+            _context.StocksHistory.AddRange(stockHistories);
+            _context.SaveChanges();
+
+            //Act
+            var result = _query.GetPriceHistory(symbol);
+
+            //Assert
+            Assert.Equal(symbol, result.Symbol);
+            Assert.Equal(quoteAmount, result.Quotes.Count);
         }
 
 
