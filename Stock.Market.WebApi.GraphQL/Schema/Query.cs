@@ -1,8 +1,11 @@
-﻿using Stock.Market.Common;
+﻿using Microsoft.Identity.Client;
+using Stock.Market.Common;
 using Stock.Market.Common.Services.Interfaces;
 using Stock.Market.Data;
 using Stock.Market.Data.Entities;
+using Stock.Market.WebApi.GraphQL.Models;
 using Stock.Market.WebApi.GraphQL.Schema.Types;
+using System.ComponentModel.DataAnnotations;
 
 namespace Stock.Market.WebApi.GraphQL.Schema
 {
@@ -43,6 +46,20 @@ namespace Stock.Market.WebApi.GraphQL.Schema
 
             return stockDataType;
 
+        }
+
+        public StockPriceHistory GetPriceHistory(string symbol)
+        {
+            var sharesBySymbol = _context.StocksHistory.Where(a => a.Symbol.Equals(symbol)).AsEnumerable();
+
+            var result = new StockPriceHistory(sharesBySymbol.First().CompanyName, sharesBySymbol.First().Symbol);
+
+            foreach (var shares in sharesBySymbol.OrderByDescending(s=>s.InsertDate))
+            {
+                result.Quotes.Add(new Quote(shares.InsertDate, shares.Price));
+            }
+
+            return result;
         }
 
         private CurrentDayReferencePrices GetCurrentDayReferencePrices(IGrouping<string, Shares> shares)
@@ -95,4 +112,5 @@ namespace Stock.Market.WebApi.GraphQL.Schema
             return $"{roundedNumber}%";
         }
     }
+
 }
