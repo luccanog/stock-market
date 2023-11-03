@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Stock.Market.Common\Stock.Market.Common.csproj" />
     <ProjectReference Include="..\Stock.Market.Data\Stock.Market.Data.csproj" />
   </ItemGroup>
 </Project>

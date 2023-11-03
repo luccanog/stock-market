@@ -2,7 +2,7 @@
 using Stock.Market.Common.Models;
 using Stock.Market.Common.Services.Interfaces;
 using Stock.Market.Data;
-using Stock.Market.Data.Models;
+using Stock.Market.Common.Models;
 using Stock.Market.WebApi.GraphQL.Services.Interfaces;
 
 namespace Stock.Market.WebApi.GraphQL.Schema

@@ -1,5 +1,5 @@
 using Confluent.Kafka;
-using Stock.Market.Data.Models;
+using Stock.Market.Common.Models;
 using Stock.Market.EventProcessor.Services.Interfaces;
 using System.Text.Json;
 

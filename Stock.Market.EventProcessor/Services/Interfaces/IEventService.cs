@@ -1,4 +1,4 @@
-﻿using Stock.Market.Data.Models;
+﻿using Stock.Market.Common.Models;
 
 namespace Stock.Market.EventProcessor.Services.Interfaces
 {

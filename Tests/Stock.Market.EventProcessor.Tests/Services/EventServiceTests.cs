@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Stock.Market.Data;
 using Stock.Market.Data.Entities;
-using Stock.Market.Data.Models;
+using Stock.Market.Common.Models;
 using Stock.Market.EventProcessor.Services;
 
 namespace Stock.Market.EventProcessor.Tests.Services
