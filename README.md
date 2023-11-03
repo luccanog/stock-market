@@ -34,7 +34,7 @@ You may see the **graphql-api** running along with **event-processor** and **his
 
 ## GraphQL commands
 
-#### Buy
+#### Buy a stock
 
 ``` graphql
 mutation{
@@ -42,7 +42,7 @@ mutation{
 }
 ```
 
-#### Sell
+#### Sell a stock
 
 ``` graphql
 mutation{
@@ -69,7 +69,7 @@ query{
 }
 ```
 
-### Get the HistoricalData
+#### Get the Historical price of a stock you bought
 
 ``` graphql
 query{
