@@ -13,20 +13,22 @@ cd stock-market
 ``` cmd
 docker-compose up
 ```
+You may see the **graphql-api** running along with **event-processor** and **history-fetcher**
 
-Done. You may see the **graphql-api** running along with **event-processor** and **history-fetcher**
+3. Go to `localhost/graphql` end send request through the UI
+
 
 ## About
 
-**Stock.Market.WebApi.GraphQL**: The main application where the graphql commands are going to be handle.
+**Stock.Market.WebApi.GraphQL** - The main application where the graphql commands are going to be handle.
 
-**Stock.Market.HistoryFetcher**: Background service in charge of retrieving Nasdaq data and update the StockHistory.
+**Stock.Market.HistoryFetcher** - Background service in charge of retrieving Nasdaq data and update the StockHistory.
 
-**Stock.Market.EventProcessor**: Background service which consumes Kafka events to Buy or Sell shares.
+**Stock.Market.EventProcessor** - Background service which consumes Kafka events to Buy or Sell shares.
 
-**Stock.Market.Data**: Library with Entities, DBContext and Migrations.
+**Stock.Market.Data** - Library with Entities, DBContext and Migrations.
 
-**Stock.Market.Common**: Library with shared code.
+**Stock.Market.Common** - Library with shared code.
 
 ## GraphQL commands
 
