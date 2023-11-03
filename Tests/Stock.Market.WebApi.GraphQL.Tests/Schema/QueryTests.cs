@@ -102,6 +102,9 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
 
             var shares = _fixture.Build<Shares>().With(s => s.Symbol, symbol).With(s => s.Date, DateTime.Now.AddDays(-7)).Create();
 
+            var foo = shares.Date.Date;
+
+
             var stocksHistory = CreateStocksHistoryData(symbol, lowestPrice, averagePrice, highestPrice);
             var nasdaqData = CreateNasdaqData(symbol, ParseDecimalCostToString(highestPrice));
 
