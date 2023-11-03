@@ -65,7 +65,7 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
             _context.Shares.Add(shares);
             _context.SaveChanges();
 
-            var lastSalePrice = ParseDecimalCostToString(originalUnitCost - 3);
+            var lastSalePrice = ParseDecimalCostToString(originalUnitCost - 0.025m);
             NasdaqData nasdaqData = CreateNasdaqData(shares.Symbol, lastSalePrice);
 
             _nasdaqServiceMock.Setup(n => n.FetchNasdaqData(shares.Symbol)).ReturnsAsync(nasdaqData);
@@ -74,7 +74,7 @@ namespace Stock.Market.WebApi.GraphQL.Tests.Schema
             var result = await _query.GetStockData();
 
             //Assert
-            Assert.Collection(result, r => Assert.Equal("-30%", r.Variation));
+            Assert.Collection(result, r => Assert.Equal("-0.25%", r.Variation));
             Assert.Collection(result, r => Assert.Equal(shares.OriginalUnitCost * shares.Quantity, r.TotalValue));
             _nasdaqServiceMock.Verify(n => n.FetchNasdaqData(It.IsAny<string>()), Times.Once());
         }

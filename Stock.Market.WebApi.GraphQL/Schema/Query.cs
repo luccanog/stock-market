@@ -1,4 +1,5 @@
-﻿using Microsoft.Identity.Client;
+﻿using Flurl.Util;
+using Microsoft.Identity.Client;
 using Stock.Market.Common;
 using Stock.Market.Common.Services.Interfaces;
 using Stock.Market.Data;
@@ -59,7 +60,7 @@ namespace Stock.Market.WebApi.GraphQL.Schema
 
             var result = new StockPriceHistory(sharesBySymbol.First().CompanyName, sharesBySymbol.First().Symbol);
 
-            foreach (var shares in sharesBySymbol.OrderByDescending(s=>s.InsertDate))
+            foreach (var shares in sharesBySymbol.OrderByDescending(s => s.InsertDate))
             {
                 result.Quotes.Add(new Quote(shares.InsertDate, shares.Price));
             }
@@ -112,9 +113,9 @@ namespace Stock.Market.WebApi.GraphQL.Schema
             decimal profitLoss = currentValue - totalCost;
             decimal profitLossPercentage = (profitLoss / totalCost) * 100;
 
-            var roundedNumber = decimal.Round(profitLossPercentage, MidpointRounding.AwayFromZero);
+            var roundedNumber = decimal.Round(profitLossPercentage, 2, MidpointRounding.AwayFromZero);
 
-            return $"{roundedNumber}%";
+            return $"{roundedNumber.ToInvariantString()}%";
         }
     }
 
