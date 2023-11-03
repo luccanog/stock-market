@@ -91,7 +91,7 @@ namespace Stock.Market.WebApi.GraphQL.Schema
 
             return new CurrentDayReferencePrices
             {
-                AveragePrice = average,
+                AveragePrice = decimal.Round(average, 2, MidpointRounding.AwayFromZero),
                 LowestPrice = lowest,
                 HighestPrice = highest
             };
