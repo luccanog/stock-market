@@ -24,7 +24,7 @@ You may see the **graphql-api** running along with **event-processor** and **his
 
 * **Stock.Market.WebApi.GraphQL** - The main application where the graphql commands are going to be validated and them sent to the Kafka stream.
 
-* **Stock.Market.HistoryFetcher** - Background service in charge of retrieving Nasdaq data and update the StockHistory. This service is triggered periodically according to the FetchDataInterval environment variable. It checks each symbols from acquired Stocks and stores the current stock quotation in the database
+* **Stock.Market.HistoryFetcher** - Background service in charge of retrieving Nasdaq data and update the StockHistory. This service is triggered periodically according to the `FetchDataInterval` environment variable. It checks each symbols from acquired Stocks and stores the current stock quotation in the database
 
 * **Stock.Market.EventProcessor** - Background service which consumes Kafka events(to Buy or Sell shares) and updates de database with the required information.
 
